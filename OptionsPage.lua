@@ -97,6 +97,16 @@ function OptionsPage:BuildUI()
       Options.hideForNoneSixty = self:GetChecked()
   end)
 
+  self:CreateCheckButton(L["SHOW_MAPPIP"],{a="TOPLEFT", x=15, y=-165},Options.minimapPipShown,function(self)
+      Options.minimapPipShown = self:GetChecked()
+
+      if Options.minimapPipShown then
+        Addon.MiniMapPip.button:Show()
+      else 
+        Addon.MiniMapPip.button:Hide()
+      end
+  end)
+
   --credits
   self:CreateLine({a="BOTTOMLEFT", x=0, y=20},{w=650, h=1},{r=1, g=1, b=1, a=0.5})
 

@@ -1,9 +1,14 @@
+local _, Addon = ...
+local L = Addon.L
+
 local function InitializeSettings()
 
     local defaults = {
         raidInfoButton = 1, -- 1=hide , 2=toggleRaidIcons , 3=showDefualtWindow
         includeZGMadness = true,
         hideForNoneSixty = false,
+        minimapPipShown = true,
+        minimapPipPostion = {x=-73,y=30},
     }
 
     if type(Options) ~= "table" then
@@ -37,6 +42,7 @@ frame:SetScript("OnEvent", function(self, event, addonName)
         end
 
         InitializeSettings()
+        Addon.MiniMapPip:Setup()
         OptionsPage:Setup()
         RaidIconPanel:Setup()
     end
