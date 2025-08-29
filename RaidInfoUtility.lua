@@ -1,7 +1,7 @@
 local _, Addon = ...
 local L = Addon.L
 
-RaidInfoUtility = {
+Addon.RaidInfoUtility = {
     RegionProfiles = {
         [1] = {baseDateTime = 1753196400}, -- US (includes Brazil and Oceania) | Tue Jul 22 2025
         [3] = {baseDateTime = 1752638400} -- Europe (includes Russia) | Wed Jul 16 2025 08:00:00                      
@@ -43,7 +43,7 @@ RaidInfoUtility = {
 }
 
 
-function RaidInfoUtility:CalculateResetTime(baseTime, intervalDays)   
+function Addon.RaidInfoUtility:CalculateResetTime(baseTime, intervalDays)   
     local now = GetServerTime()
     local elapsed = now - baseTime
 
@@ -62,7 +62,7 @@ function RaidInfoUtility:CalculateResetTime(baseTime, intervalDays)
     return table.concat(parts, " ")
 end
 
-function RaidInfoUtility:CalculateWZGMaddnessInfo()
+function Addon.RaidInfoUtility:CalculateWZGMaddnessInfo()
     local regionDateTime = self.ZGMadness.TimeProfiles[GetCurrentRegion()].regionDateTime
 
     local now = GetServerTime()
@@ -88,18 +88,13 @@ function RaidInfoUtility:CalculateWZGMaddnessInfo()
     return madness
 end
 
-
-
-
-
-function RaidInfoUtility:GetSavedRaidInfo(index)
-
+function Addon.RaidInfoUtility:GetSavedRaidInfo(index)
     local name, id, reset, difficulty, locked, extended, instanceIDMostSig, isRaid, maxPlayers,
           difficultyName, numEncounters, encounterProgress, extendDisabled, instanceId = GetSavedInstanceInfo(index)
     return instanceId, id
 end
 
-function RaidInfoUtility:StoreSavedRaidIDs()
+function Addon.RaidInfoUtility:StoreSavedRaidIDs()
     self.SavedIDs = {}
 	for i = 1, GetNumSavedInstances() do
 		local raidID, instanceId = self:GetSavedRaidInfo(i)  
@@ -107,10 +102,10 @@ function RaidInfoUtility:StoreSavedRaidIDs()
 	end
 end
 
-function RaidInfoUtility:GetMapPipData()
+function Addon.RaidInfoUtility:GetMapPipData()
     self:StoreSavedRaidIDs()
     local raidData = {}
-    for key,value in pairs(RaidInfoUtility.Raids) do        
+    for key,value in pairs(self.Raids) do        
         local raid = {
             id = value.id,
             name = value.name,
@@ -120,6 +115,6 @@ function RaidInfoUtility:GetMapPipData()
         }
         table.insert(raidData, raid)
     end
-    local zgData = RaidInfoUtility:CalculateWZGMaddnessInfo()
+    local zgData = self:CalculateWZGMaddnessInfo()
     return raidData , zgData
 end

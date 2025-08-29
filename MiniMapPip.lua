@@ -59,7 +59,7 @@ function Addon.MiniMapPip:Setup()
     end)
 
     minimapButton:SetScript("OnEnter", function(self)
-        local raidData , zgData = RaidInfoUtility:GetMapPipData()
+        local raidData , zgData = Addon.RaidInfoUtility:GetMapPipData()
 
         GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
         GameTooltip:SetText("Classic Raid Info & Resets", 1, 1, 1)
