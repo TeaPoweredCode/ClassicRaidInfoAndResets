@@ -13,9 +13,9 @@ MiniMapPip.lua
 
 ViewFull.lua
 ViewIcon.lua
-ViewSmiple.lua
+ViewSimple.lua
 
-RaidInfoFrames.lua
+RaidInfoTabManager.lua
 
 OptionsPage.lua
 Init.lua

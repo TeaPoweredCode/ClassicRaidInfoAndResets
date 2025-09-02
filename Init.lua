@@ -9,6 +9,7 @@ local function InitializeSettings()
         hideForNoneSixty = false,
         minimapPipShown = true,
         minimapPipPostion = {x=-73,y=30},
+        selectedView = 1 , -- 1=IconView , 2=SimpleView , 3=FullView
     }
 
     if type(Options) ~= "table" then
@@ -42,6 +43,6 @@ frame:SetScript("OnEvent", function(self, event, addonName)
         InitializeSettings()
         OptionsPage:Setup()
         Addon.MiniMapPip:Setup()
-        Addon.RaidInfoFrames:Setup()
+        Addon.RaidInfoTabManager:Setup()
     end
 end)

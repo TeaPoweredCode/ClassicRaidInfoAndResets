@@ -1,11 +1,11 @@
 local _, Addon = ...
 local L = Addon.L
 
-Addon.RaidInfoFrames = {
+Addon.RaidInfoTabManager = {
     CustomRaidInfoButton = nil,
 }
 
-function Addon.RaidInfoFrames:ModifyDefaultUI()
+function Addon.RaidInfoTabManager:ModifyDefaultUI()
     local point, relativeTo, relativePoint, xOfs, yOfs = RaidInfoFrame:GetPoint()
     RaidInfoFrame:ClearAllPoints()
     RaidInfoFrame:SetPoint(point, relativeTo, relativePoint, xOfs + 40, yOfs)
@@ -22,13 +22,14 @@ function Addon.RaidInfoFrames:ModifyDefaultUI()
             self.IconPanel:Hide()
         else 
             self.IconPanel:Show()
+            self:HideViewFrames()
         end
     end)
 
     self.CustomRaidInfoButton = copyButton;
 end
 
-function Addon.RaidInfoFrames:HandleRaidInfoButton()
+function Addon.RaidInfoTabManager:HandleRaidInfoButton()
     self.CustomRaidInfoButton:Hide()
     RaidFrameRaidInfoButton:Hide()
     if Options.raidInfoButton == 2 then  -- 2=toggleRaidIcons
@@ -38,42 +39,45 @@ function Addon.RaidInfoFrames:HandleRaidInfoButton()
     end
 end
 
-function Addon.RaidInfoFrames:HideViewFrames()
-    Addon.ViewIcon:Hide()
-    -- self.Full_View:Hide()
-    -- self.Simple_View:Hide()
-end
+function Addon.RaidInfoTabManager:ShowViewFrames()
+    Addon.RaidInfoUtility:StoreSavedRaidIDs()
 
-
-
-function Addon.RaidInfoFrames:UpdateIconVisibility()
-    local selectedTab = PanelTemplates_GetSelectedTab(FriendsFrame)
-    if selectedTab == 4 then
-        Addon.RaidInfoUtility:StoreSavedRaidIDs()
-        -- self:SetRaidIcons()
-        if UnitLevel("player") >= 60 or not Options.hideForNoneSixty then
-            Addon.RaidInfoUtility:StoreSavedRaidIDs()
-            Addon.ViewIcon:Show()
-        end
+    if Options.selectedView == 1 then
+        Addon.ViewIcon:Show()
+    elseif Options.selectedView == 2 then
+        Addon.ViewSimple:Show()
     else
-        Addon.ViewIcon:Hide()
+        --Addon.ViewFull:Show()
     end
 end
 
-function Addon.RaidInfoFrames:Setup()   
+function Addon.RaidInfoTabManager:HideViewFrames()
+    Addon.ViewIcon:Hide()
+    Addon.ViewSimple:Hide()
+end
 
-    -- get items cached 
-    -- for key,value in pairs(self.ZGMadness.Bosses) do     
-    --     GetItemInfo(value.item.id)  
-    -- end
 
-    --self:BuildIconView()
-    -- self:BuildUI()
+
+function Addon.RaidInfoTabManager:UpdateIconVisibility()
+    local selectedTab = PanelTemplates_GetSelectedTab(FriendsFrame)
+    if selectedTab == 4 then
+        if UnitLevel("player") >= 60 or not Options.hideForNoneSixty then
+            self:ShowViewFrames()
+        end
+    else
+        self:HideViewFrames()
+    end
+end
+
+function Addon.RaidInfoTabManager:Setup()   
+
     self:ModifyDefaultUI()
 
     Addon.ViewIcon:Init()
+    Addon.ViewSimple:Init()
 
     FriendsFrame:HookScript("OnShow", function()
+        self:HideViewFrames()
         self:HandleRaidInfoButton()
     end)
     FriendsFrame:HookScript("OnHide", function()
