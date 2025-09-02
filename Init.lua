@@ -22,10 +22,8 @@ local function InitializeSettings()
     end
 end
 
-
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
-
 frame:SetScript("OnEvent", function(self, event, addonName)
 
     if addonName == "ClassicRaidInfoAndResets" then 
@@ -42,8 +40,8 @@ frame:SetScript("OnEvent", function(self, event, addonName)
         end
 
         InitializeSettings()
-        Addon.MiniMapPip:Setup()
         OptionsPage:Setup()
-        RaidIconPanel:Setup()
+        Addon.MiniMapPip:Setup()
+        Addon.RaidInfoFrames:Setup()
     end
 end)

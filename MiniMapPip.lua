@@ -68,7 +68,7 @@ function Addon.MiniMapPip:Setup()
         for key,value in pairs(raidData) do
             local raidString = (value.savedID and savedColourString or unSavedColourString):format(value.name,(value.savedID and value.savedID or L["NOT_SAVED"]))
             GameTooltip:AddDoubleLine(raidString, value.time, 1, 1, 1, 0.2, 0.8, 0.2)
-            if value.shortHand == "ZG" and Options.includeZGMadness then
+            if value.code == "ZG" and Options.includeZGMadness then
                 local zgString = ("- |cffff8000%s|r |T%s:16:16:0:0|t |cff1eff00[%s]|r"):format(zgData.boss.name,zgData.item.icon,zgData.item.localName and zgData.item.localName or zgData.item.name)
                 GameTooltip:AddDoubleLine(zgString, zgData.changeIn, 1, 1, 1, 0.2, 0.8, 0.2)
             end

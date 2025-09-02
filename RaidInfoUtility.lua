@@ -6,14 +6,15 @@ Addon.RaidInfoUtility = {
         [1] = {baseDateTime = 1753196400}, -- US (includes Brazil and Oceania) | Tue Jul 22 2025
         [3] = {baseDateTime = 1752638400} -- Europe (includes Russia) | Wed Jul 16 2025 08:00:00                      
     },
+    RaidOrder = {"MC","ONY","ZG","BWL","AQ20","AQ40","NAXX"},
     Raids = {
-        {id = 409, name = L["MOLTEN_CORE"], shortHand = "MC", raidDays = 7, iconFrame = nil},
-        {id = 249, name = L["ONYXIAS_LAIR"], shortHand = "ONY", raidDays = 5, iconFrame = nil},
-        {id = 309, name = L["ZULGURUB"], shortHand = "ZG",  raidDays = 3, iconFrame = nil},
-        {id = 469, name = L["BLACKWING_LAIR"], shortHand = "BWL",  raidDays = 7, iconFrame = nil},
-        {id = 509, name = L["RUINS_OF_AHNQIRAJ"], shortHand = "AQ20",  raidDays = 3, iconFrame = nil},
-        {id = 531, name = L["AHNQIRAJ_TEMPLE"], shortHand = "AQ40",  raidDays = 7, iconFrame = nil},
-        {id = 533, name = L["NAXXRAMAS"], shortHand = "NAXX",  raidDays = 7, iconFrame = nil},
+        ["MC"] =   {code = "MC", id = 409, name = L["MOLTEN_CORE"], raidDays = 7},
+        ["ONY"] =  {code = "ONY", id = 249, name = L["ONYXIAS_LAIR"], raidDays = 5},
+        ["ZG"] =   {code = "ZG", id = 309, name = L["ZULGURUB"],  raidDays = 3},
+        ["BWL"] =  {code = "BWL", id = 469, name = L["BLACKWING_LAIR"],  raidDays = 7},
+        ["AQ20"] = {code = "AQ20", id = 509, name = L["RUINS_OF_AHNQIRAJ"],  raidDays = 3},
+        ["AQ40"] = {code = "AQ40", id = 531, name = L["AHNQIRAJ_TEMPLE"],  raidDays = 7},
+        ["NAXX"] = {code = "NAXX", id = 533, name = L["NAXXRAMAS"],  raidDays = 7},
     },
     ZGMadness = {
         TimeProfiles = {
@@ -41,7 +42,6 @@ Addon.RaidInfoUtility = {
     },
     SavedIDs = nil
 }
-
 
 function Addon.RaidInfoUtility:CalculateResetTime(baseTime, intervalDays)   
     local now = GetServerTime()
@@ -74,7 +74,7 @@ function Addon.RaidInfoUtility:CalculateWZGMaddnessInfo()
     local timeIntoCycle = elapsed % eightWeeks
     local currentBlock = math.floor(timeIntoCycle / twoWeekBlock) + 1
 
-    local madness = RaidIconPanel.ZGMadness.Bosses[currentBlock]
+    local madness = self.ZGMadness.Bosses[currentBlock]
  
     if madness.item.localName == nil then
         local name = GetItemInfo(madness.item.id)
@@ -84,7 +84,7 @@ function Addon.RaidInfoUtility:CalculateWZGMaddnessInfo()
         end
     end
 
-    madness.changeIn = RaidIconPanel:GetResetTime(regionDateTime,14)
+    madness.changeIn = self:CalculateResetTime(regionDateTime,14)
     return madness
 end
 
@@ -102,19 +102,27 @@ function Addon.RaidInfoUtility:StoreSavedRaidIDs()
 	end
 end
 
+function Addon.RaidInfoUtility:GetRaidsData()
+    local allRaids = {}
+    for key,value in ipairs(self.RaidOrder) do 
+        table.insert(allRaids, self:GetRaidData(value))
+    end
+
+    return allRaids
+end
+
+function Addon.RaidInfoUtility:GetRaidData(key)
+    local data = self.Raids[key]
+    return {
+        code = data.code,
+        id = data.id,
+        name = data.name,
+        savedID = self.SavedIDs[data.id],
+        time = self:CalculateResetTime(self.RegionProfiles[GetCurrentRegion()].baseDateTime , data.raidDays),
+    }
+end
+
 function Addon.RaidInfoUtility:GetMapPipData()
     self:StoreSavedRaidIDs()
-    local raidData = {}
-    for key,value in pairs(self.Raids) do        
-        local raid = {
-            id = value.id,
-            name = value.name,
-            shortHand = value.shortHand,
-            savedID = self.SavedIDs[value.id],
-            time = self:CalculateResetTime(self.RegionProfiles[GetCurrentRegion()].baseDateTime , value.raidDays),
-        }
-        table.insert(raidData, raid)
-    end
-    local zgData = self:CalculateWZGMaddnessInfo()
-    return raidData , zgData
+    return self:GetRaidsData() , self:CalculateWZGMaddnessInfo()
 end

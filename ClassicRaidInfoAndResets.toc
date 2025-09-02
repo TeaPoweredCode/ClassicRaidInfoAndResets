@@ -8,7 +8,14 @@
 localisations\enUS.lua
 
 RaidInfoUtility.lua
+
 MiniMapPip.lua
-RaidIconPanel.lua
+
+ViewFull.lua
+ViewIcon.lua
+ViewSmiple.lua
+
+RaidInfoFrames.lua
+
 OptionsPage.lua
 Init.lua
