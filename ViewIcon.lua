@@ -69,7 +69,7 @@ function Addon.ViewIcon:ShowRaidTooltip(iconFrame,raidCode)
 end
 
 function Addon.ViewIcon:AddZGMaddnessTooltipInfo()
-    local zgData = Addon.RaidInfoUtility:CalculateWZGMaddnessInfo()
+    local zgData = Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
     
     GameTooltip:AddLine(" ") 
     GameTooltip:AddLine(("|cffffffff%s|r"):format(L["EDGE_OF_MADNESS"]))
@@ -85,9 +85,8 @@ function Addon.ViewIcon:AddZGMaddnessTooltipInfo()
         maddnessLine:SetFont(_font, 14, _flags)
     end
 
-    local itemName = zgData.item.localName and zgData.item.localName or zgData.item.name
-    GameTooltip:AddLine(("|cffff8000%s|r"):format(zgData.boss.name))
-    GameTooltip:AddLine(("|T%s:16:16:0:0|t |cff1eff00[%s]|r"):format(zgData.item.icon,itemName))
+    GameTooltip:AddLine(("|cffff8000%s|r"):format(zgData.boss))
+    GameTooltip:AddLine(("|T%s:16:16:0:0|t |cff1eff00[%s]|r"):format(zgData.itemIcon,zgData.itemName))
     GameTooltip:AddLine(L["CHANGES_IN"] ..": " .. zgData.changeIn, 0.2, 0.8, 0.2)
 end
 

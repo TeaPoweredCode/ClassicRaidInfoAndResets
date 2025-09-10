@@ -62,7 +62,7 @@ function Addon.RaidInfoUtility:CalculateResetTime(baseTime, intervalDays)
     return table.concat(parts, " ")
 end
 
-function Addon.RaidInfoUtility:CalculateWZGMaddnessInfo()
+function Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
     local regionDateTime = self.ZGMadness.TimeProfiles[GetCurrentRegion()].regionDateTime
 
     local now = GetServerTime()
@@ -74,18 +74,23 @@ function Addon.RaidInfoUtility:CalculateWZGMaddnessInfo()
     local timeIntoCycle = elapsed % eightWeeks
     local currentBlock = math.floor(timeIntoCycle / twoWeekBlock) + 1
 
-    local madness = self.ZGMadness.Bosses[currentBlock]
- 
-    if madness.item.localName == nil then
-        local name = GetItemInfo(madness.item.id)
+    if self.ZGMadness.Bosses[currentBlock].item.localName == nil then
+        local name = GetItemInfo(self.ZGMadness.Bosses[currentBlock].item.id)
         if(name) then 
-            madness.item.localName = name
-            itemName = name
+            self.ZGMadness.Bosses[currentBlock].item.localName = name
         end
     end
 
-    madness.changeIn = self:CalculateResetTime(regionDateTime,14)
-    return madness
+    local itemName = self.ZGMadness.Bosses[currentBlock].item.localName and self.ZGMadness.Bosses[currentBlock].item.localName 
+                                                                         or self.ZGMadness.Bosses[currentBlock].item.name
+    local zgData = {
+        boss = self.ZGMadness.Bosses[currentBlock].boss.name,
+        itemName = itemName,
+        itemIcon = self.ZGMadness.Bosses[currentBlock].item.icon,
+        changeIn = self:CalculateResetTime(regionDateTime,14),
+    }
+    zgData.formated = ("|cffff8000%s|r |T%s:16:16:0:0|t |cff1eff00[%s]|r"):format(zgData.boss,zgData.itemIcon,zgData.itemName)
+    return zgData
 end
 
 function Addon.RaidInfoUtility:GetSavedRaidInfo(index)
@@ -120,9 +125,4 @@ function Addon.RaidInfoUtility:GetRaidData(key)
         savedID = self.SavedIDs[data.id],
         time = self:CalculateResetTime(self.RegionProfiles[GetCurrentRegion()].baseDateTime , data.raidDays),
     }
-end
-
-function Addon.RaidInfoUtility:GetMapPipData()
-    self:StoreSavedRaidIDs()
-    return self:GetRaidsData() , self:CalculateWZGMaddnessInfo()
 end

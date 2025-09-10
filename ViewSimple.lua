@@ -18,19 +18,9 @@ function Addon.ViewSimple:Init()
         insets = { left = 4, right = 4, top = 4, bottom = 4 },
     })
 
-    local title = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    title:SetPoint("TOPLEFT", self.Frame, "TOPLEFT", 10, -10)
-    title:SetText("Classic Raid Info & Resets")
-
-    self.RaidsText = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    self.RaidsText:SetPoint("TOPLEFT", self.Frame, "TOPLEFT", 10, -30)
-    self.RaidsText:SetJustifyH("LEFT")
-    self.RaidsText:SetText("RAIDS")
-
-    self.TimesText = self.Frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    self.TimesText:SetPoint("TOPRIGHT", self.Frame, "TOPRIGHT", -10, -30)
-    self.TimesText:SetJustifyH("RIGHT")
-    self.TimesText:SetText("TIMES")
+    Addon.UIHelper:CreateTextElement(self.Frame, "TOPLEFT", 10, -10, "LEFT", "Classic Raid Info & Resets")
+    self.RaidsText = Addon.UIHelper:CreateTextElement(self.Frame, "TOPLEFT", 10, -30, "LEFT", "RAIDS")
+    self.TimesText = Addon.UIHelper:CreateTextElement(self.Frame, "TOPRIGHT", -10, -30, "RIGHT", "TIMES")
 
     self.Frame:Hide()
 end
@@ -44,7 +34,7 @@ end
 
 function Addon.ViewSimple:SetRaidStates()
     local raidsData = Addon.RaidInfoUtility:GetRaidsData()
-    local zgData = Addon.RaidInfoUtility:CalculateWZGMaddnessInfo()
+    local zgData = Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
 
     local unSavedColourString = "|cffffd100%s -|r |cff8d8d8d%s|r"
     local savedColourString = "|cffffd100%s -|r |cffffffff%s|r"
@@ -58,8 +48,7 @@ function Addon.ViewSimple:SetRaidStates()
         table.insert(timesStrings, raid.time)
 
         if raid.code == "ZG" and Options.includeZGMadness then
-            local zgString = ("- |cffff8000%s|r |T%s:16:16:0:0|t |cff1eff00[%s]|r"):format(zgData.boss.name,zgData.item.icon,zgData.item.localName and zgData.item.localName or zgData.item.name)
-            table.insert(raidsStrings, zgString)
+            table.insert(raidsStrings, ("|cffffffff%s|r"):format("- ") .. zgData.formated)
             table.insert(timesStrings, zgData.changeIn)
         end
     end

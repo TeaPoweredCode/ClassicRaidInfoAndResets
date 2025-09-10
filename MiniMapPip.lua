@@ -59,18 +59,19 @@ function Addon.MiniMapPip:Setup()
     end)
 
     minimapButton:SetScript("OnEnter", function(self)
-        local raidData , zgData = Addon.RaidInfoUtility:GetMapPipData()
+        Addon.RaidInfoUtility:StoreSavedRaidIDs()
+        local raidsData = Addon.RaidInfoUtility:GetRaidsData()
+        local zgData = Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
 
         GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
         GameTooltip:SetText("Classic Raid Info & Resets", 1, 1, 1)
         local unSavedColourString = "|cffffd100%s -|r |cff8d8d8d%s|r"
         local savedColourString = "|cffffd100%s -|r |cffffffff%s|r"
-        for key,value in pairs(raidData) do
+        for key,value in pairs(raidsData) do
             local raidString = (value.savedID and savedColourString or unSavedColourString):format(value.name,(value.savedID and value.savedID or L["NOT_SAVED"]))
             GameTooltip:AddDoubleLine(raidString, value.time, 1, 1, 1, 0.2, 0.8, 0.2)
             if value.code == "ZG" and Options.includeZGMadness then
-                local zgString = ("- |cffff8000%s|r |T%s:16:16:0:0|t |cff1eff00[%s]|r"):format(zgData.boss.name,zgData.item.icon,zgData.item.localName and zgData.item.localName or zgData.item.name)
-                GameTooltip:AddDoubleLine(zgString, zgData.changeIn, 1, 1, 1, 0.2, 0.8, 0.2)
+                GameTooltip:AddDoubleLine("- " .. zgData.formated, zgData.changeIn, 1, 1, 1, 0.2, 0.8, 0.2)
             end
         end
         GameTooltip:Show()

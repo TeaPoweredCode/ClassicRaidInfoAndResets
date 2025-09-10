@@ -3,6 +3,11 @@ local L = Addon.L
 
 Addon.RaidInfoTabManager = {
     CustomRaidInfoButton = nil,
+    Views = {
+        Addon.ViewIcon,
+        Addon.ViewSimple,
+        Addon.ViewFull
+    },
 }
 
 function Addon.RaidInfoTabManager:ModifyDefaultUI()
@@ -40,23 +45,15 @@ function Addon.RaidInfoTabManager:HandleRaidInfoButton()
 end
 
 function Addon.RaidInfoTabManager:ShowViewFrames()
-    Addon.RaidInfoUtility:StoreSavedRaidIDs()
-
-    if Options.selectedView == 1 then
-        Addon.ViewIcon:Show()
-    elseif Options.selectedView == 2 then
-        Addon.ViewSimple:Show()
-    else
-        --Addon.ViewFull:Show()
-    end
+    Options.selectedView = 3
+    self.Views[Options.selectedView]:Show()
 end
 
 function Addon.RaidInfoTabManager:HideViewFrames()
-    Addon.ViewIcon:Hide()
-    Addon.ViewSimple:Hide()
+    for i,view in pairs(self.Views) do
+        view:Hide()
+    end
 end
-
-
 
 function Addon.RaidInfoTabManager:UpdateIconVisibility()
     local selectedTab = PanelTemplates_GetSelectedTab(FriendsFrame)
@@ -73,8 +70,9 @@ function Addon.RaidInfoTabManager:Setup()
 
     self:ModifyDefaultUI()
 
-    Addon.ViewIcon:Init()
-    Addon.ViewSimple:Init()
+    for i,view in pairs(self.Views) do
+        view:Init()
+    end
 
     FriendsFrame:HookScript("OnShow", function()
         self:HideViewFrames()
