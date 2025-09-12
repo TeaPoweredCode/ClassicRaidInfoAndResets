@@ -11,16 +11,38 @@ function Addon.UIHelper:Shown(element, show)
     end
 end
 
-function Addon.UIHelper:CreateTextElement(parent, anchorPoint, xPos, yPos, align, text , colour , fontSize)
-    local textEle = parent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    textEle:SetPoint(anchorPoint, xPos, yPos)
-    textEle:SetFont("Fonts\\FRIZQT__.TTF", fontSize or 12)
-    textEle:SetJustifyH(align or "LEFT")
-    textEle:SetText(text or "")
+function Addon.UIHelper:CreateLine(parent,pos, size, colour)
+    local line = parent:CreateTexture(nil, "ARTWORK")    
+    line:SetSize(unpack(size))
+    line:SetPoint(unpack(pos))
+    line:SetColorTexture(unpack(colour))
+    return line
+end
+
+function Addon.UIHelper:CreateText(parent, value, pos, size, colour, align)
+    local text = parent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    text:SetPoint(unpack(pos))
+    text:SetText(value or "")
+    text:SetJustifyH(align or "LEFT")
 
     if colour then
-        textEle:SetTextColor(unpack(colour))
+        text:SetTextColor(unpack(colour))
     end
 
-    return textEle
+    if size then
+        local fontName, fontHeight, fontFlags = GameFontNormal:GetFont()
+        text:SetFont(fontName, size, fontFlags)
+    end
+
+    return text
+end
+
+function Addon.UIHelper:CreateCheckButton(parent, text, pos, checked, func)
+    local CheckButton = CreateFrame("CheckButton", nil, parent, "InterfaceOptionsCheckButtonTemplate")
+    CheckButton:SetPoint(unpack(pos))
+    CheckButton.Text:SetText(text)
+    CheckButton:SetChecked(checked)
+    CheckButton:SetScript("OnClick", func)
+
+    return CheckButton;
 end

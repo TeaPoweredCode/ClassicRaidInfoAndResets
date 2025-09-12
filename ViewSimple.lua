@@ -18,9 +18,9 @@ function Addon.ViewSimple:Init()
         insets = { left = 4, right = 4, top = 4, bottom = 4 },
     })
 
-    Addon.UIHelper:CreateTextElement(self.Frame, "TOPLEFT", 10, -10, "LEFT", "Classic Raid Info & Resets")
-    self.RaidsText = Addon.UIHelper:CreateTextElement(self.Frame, "TOPLEFT", 10, -30, "LEFT", "RAIDS")
-    self.TimesText = Addon.UIHelper:CreateTextElement(self.Frame, "TOPRIGHT", -10, -30, "RIGHT", "TIMES")
+    Addon.UIHelper:CreateText(self.Frame, "Classic Raid Info & Resets", {"TOPLEFT", 10, -10})
+    self.RaidsText = Addon.UIHelper:CreateText(self.Frame, "RAIDS", {"TOPLEFT", 10, -30})
+    self.TimesText = Addon.UIHelper:CreateText(self.Frame, "TIMES", {"TOPRIGHT", -10, -30}, nil, nil, "RIGHT")
 
     self.Frame:Hide()
 end

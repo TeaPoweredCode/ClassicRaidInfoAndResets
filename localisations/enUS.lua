@@ -15,6 +15,11 @@ L["INCLUDE_EDGE_OF_MADNESS"] = "Include Edge of Madness for Zul'Gurub"
 L["HIDE_FOR_NONE_SIXTIES"] = "Hide for none level 60s"
 L["SHOW_MAPPIP"] = "Show map pip"
 
+L["Select_View"] = "Select view"
+L["Icon_View"] = "Icon view"
+L["Full_View"] = "Full view"
+L["Simple_View"] = "Simple view"
+
 L["MOLTEN_CORE"] = "Molten Core"
 L["ONYXIAS_LAIR"] = "Onyxia's Lair"
 L["ZULGURUB"] = "Zul'Gurub"

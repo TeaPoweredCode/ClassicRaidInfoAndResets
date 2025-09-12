@@ -51,18 +51,18 @@ function Addon.ViewFull:Init()
             insets = { left = 4, right = 4, top = 4, bottom = 4 },
         })
 
-        local raidName = Addon.UIHelper:CreateTextElement(elements.textGroup, "TOPLEFT", 8, -8, "LEFT", Addon.RaidInfoUtility.Raids[key].name)
+        local raidName = Addon.UIHelper:CreateText(elements.textGroup, Addon.RaidInfoUtility.Raids[key].name, {"TOPLEFT", 8, -8})
         raidName:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
 
-        elements.raidSavedID = Addon.UIHelper:CreateTextElement(elements.textGroup, "TOPRIGHT", -8, -8, "RIGHT", "ID: " .. L["NOT_SAVED"], nil, 10)
-        elements.raidTime = Addon.UIHelper:CreateTextElement(elements.textGroup, "TOPLEFT", 8, -25, "LEFT", "TIME", {0.2,0.8,0.2})
+        elements.raidSavedID = Addon.UIHelper:CreateText(elements.textGroup, L["NOT_SAVED"], {"TOPRIGHT", -8, -8}, 10, nil, "RIGHT")
+        elements.raidTime = Addon.UIHelper:CreateText(elements.textGroup, "TIME", {"TOPLEFT", 8, -25}, nil,  {0.2,0.8,0.2})
 
         Addon.ViewFull.Sizes.maxTextWidth = math.max(raidName:GetStringWidth() + elements.raidSavedID:GetStringWidth(), Addon.ViewFull.Sizes.maxTextWidth)
 
         if key == "ZG" then
             elements.textGroup:SetHeight(Addon.ViewFull.Sizes.iconSize + 35)
-            elements.zgBoss = Addon.UIHelper:CreateTextElement(elements.textGroup, "TOPLEFT", 8, -40, "LEFT", "MADDNESS_STRING")
-            elements.zgTime = Addon.UIHelper:CreateTextElement(elements.textGroup, "TOPLEFT", 8, -58, "LEFT", "MADDNESS_TIME", {0.2,0.8,0.2})
+            elements.zgBoss = Addon.UIHelper:CreateText(elements.textGroup, "MADDNESS_STRING", {"TOPLEFT", 8, -40})
+            elements.zgTime = Addon.UIHelper:CreateText(elements.textGroup, "MADDNESS_TIME", {"TOPLEFT", 8, -58}, nil, {0.2,0.8,0.2})
         end
 
         self.RaidElements[key] = elements

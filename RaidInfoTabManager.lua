@@ -4,9 +4,9 @@ local L = Addon.L
 Addon.RaidInfoTabManager = {
     CustomRaidInfoButton = nil,
     Views = {
-        Addon.ViewIcon,
+        Addon.ViewIcon,        
+        Addon.ViewFull,
         Addon.ViewSimple,
-        Addon.ViewFull
     },
 }
 
@@ -45,7 +45,6 @@ function Addon.RaidInfoTabManager:HandleRaidInfoButton()
 end
 
 function Addon.RaidInfoTabManager:ShowViewFrames()
-    Options.selectedView = 3
     self.Views[Options.selectedView]:Show()
 end
 
