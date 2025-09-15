@@ -12,7 +12,7 @@ function Addon.OptionsPage:CreateRaidInfoDropdown()
 
     local options = {
         {text = L["HIDE_BUTTON"], value = 1},
-        {text = L["TOGGLE_RAID_ICONS"], value = 2},
+        {text = L["TOGGLE_RAID_VIEW"], value = 2},
         {text = L["SHOW_DEFAULT_INFO_WINDOW"], value = 3},
     }
 

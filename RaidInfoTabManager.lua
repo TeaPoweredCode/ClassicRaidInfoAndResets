@@ -19,12 +19,8 @@ function Addon.RaidInfoTabManager:ModifyDefaultUI()
     copyButton:GetFontString():SetTextColor(r, g, b, a)
 
     copyButton:SetScript("OnClick", function()
-        if (self.IconPanel:IsShown()) then
-            self.IconPanel:Hide()
-        else 
-            self.IconPanel:Show()
-            self:HideViewFrames()
-        end
+        local viewFrame = self.Views[Options.selectedView].Frame
+        Addon.UIHelper:Shown(viewFrame,not viewFrame:IsShown())
     end)
 
     self.CustomRaidInfoButton = copyButton;
