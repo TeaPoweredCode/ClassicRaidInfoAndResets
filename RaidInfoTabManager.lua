@@ -11,10 +11,6 @@ Addon.RaidInfoTabManager = {
 }
 
 function Addon.RaidInfoTabManager:ModifyDefaultUI()
-    local point, relativeTo, relativePoint, xOfs, yOfs = RaidInfoFrame:GetPoint()
-    RaidInfoFrame:ClearAllPoints()
-    RaidInfoFrame:SetPoint(point, relativeTo, relativePoint, xOfs + 40, yOfs)
-
     local copyButton = CreateFrame("Button", nil, RaidFrameRaidInfoButton:GetParent(), "UIPanelButtonTemplate")
     copyButton:SetSize(RaidFrameRaidInfoButton:GetWidth(), RaidFrameRaidInfoButton:GetHeight())
     copyButton:SetText(RaidFrameRaidInfoButton:GetText())
@@ -32,16 +28,16 @@ function Addon.RaidInfoTabManager:ModifyDefaultUI()
     end)
 
     self.CustomRaidInfoButton = copyButton;
+
+    local point, relativeTo, relativePoint, xOfs, yOfs = RaidInfoFrame:GetPoint()
+    RaidInfoFrame:ClearAllPoints()
+    RaidInfoFrame:SetPoint("TOPRIGHT", relativeTo, "TOPRIGHT", 0, yOfs-1)
+    RaidInfoFrame:SetFrameStrata("TOOLTIP")
 end
 
-function Addon.RaidInfoTabManager:HandleRaidInfoButton()
-    self.CustomRaidInfoButton:Hide()
-    RaidFrameRaidInfoButton:Hide()
-    if Options.raidInfoButton == 2 then  -- 2=toggleRaidIcons
-        self.CustomRaidInfoButton:Show()
-    elseif Options.raidInfoButton == 3 then -- 3=showDefualtWindow
-        RaidFrameRaidInfoButton:Show()
-    end
+function Addon.RaidInfoTabManager:SetRaidInfoButton()
+    Addon.UIHelper:Shown(self.CustomRaidInfoButton, Options.raidInfoButton == 2)
+    Addon.UIHelper:Shown(RaidFrameRaidInfoButton, Options.raidInfoButton == 3)
 end
 
 function Addon.RaidInfoTabManager:ShowViewFrames()
@@ -66,7 +62,6 @@ function Addon.RaidInfoTabManager:UpdateIconVisibility()
 end
 
 function Addon.RaidInfoTabManager:Setup()   
-
     self:ModifyDefaultUI()
 
     for i,view in pairs(self.Views) do
@@ -75,7 +70,7 @@ function Addon.RaidInfoTabManager:Setup()
 
     FriendsFrame:HookScript("OnShow", function()
         self:HideViewFrames()
-        self:HandleRaidInfoButton()
+        self:SetRaidInfoButton()
     end)
     FriendsFrame:HookScript("OnHide", function()
         self:HideViewFrames()

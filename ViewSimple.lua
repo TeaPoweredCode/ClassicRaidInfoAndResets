@@ -20,7 +20,8 @@ function Addon.ViewSimple:Init()
     Addon.UIHelper:CreateText(self.Frame, "Classic Raid Info & Resets", {"TOPLEFT", 10, -10}, 14, {1,1,1})
     self.RaidsText = Addon.UIHelper:CreateText(self.Frame, "RAIDS", {"TOPLEFT", 10, -30})
 
-    self.Fr
+    self.Frame:Hide()
+end
 
 function Addon.ViewSimple:Show()
     Addon.RaidInfoUtility:StoreSavedRaidIDs()
@@ -52,7 +53,7 @@ function Addon.ViewSimple:SetRaidStates()
 
     self.RaidsText:SetText( table.concat(raidsStrings, "\n"))
 
-    local setWidth = self.RaidsText:GetStringWidth() + 20 + boarder edge
+    local setWidth = self.RaidsText:GetStringWidth() + 20  -- + middle gap size + boarder edge
     local setHeight = self.RaidsText:GetStringHeight() + 30 + 10 -- + Title space + bottom boarder edge
 
     self.Frame:SetSize(setWidth, setHeight)
