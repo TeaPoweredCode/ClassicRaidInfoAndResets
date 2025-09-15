@@ -19,7 +19,7 @@ Addon.RaidInfoUtility = {
     ZGMadness = {
         TimeProfiles = {
             [1] = {regionDateTime = 1751353200},   -- UTC+7
-            [3] = {regionDateTime = 1751328000}    -- UTC 
+            [3] = {regionDateTime = 1751320800}    -- UTC-2
         },
         Bosses = {
             {
