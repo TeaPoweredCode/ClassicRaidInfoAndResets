@@ -71,7 +71,7 @@ function Addon.OptionsPage:DrawSimpleView(pos)
     groupFrame:SetSize(200, 150)
 
     self:DrawFrame(groupFrame,{100, 150},{"TOPLEFT", 0, 0})
-    self:DrawFrame(groupFrame,{70, 40},{"TOPLEFT", 98, 0})
+    self:DrawFrame(groupFrame,{50, 100},{"TOPLEFT", 98, 0})
     
     groupFrame:SetPoint(unpack(pos))
     return groupFrame

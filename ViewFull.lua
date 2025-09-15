@@ -13,7 +13,7 @@ Addon.ViewFull = {
 function Addon.ViewFull:Init()
     self.Frame = CreateFrame("Frame", "Full_View", FriendsFrame)
     self.Frame:SetSize(220, 400)
-    self.Frame:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", 0, -23)
+    self.Frame:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", -2, -20)
 
     for i,key in pairs(Addon.RaidInfoUtility.RaidOrder) do       
         local elements = {}
