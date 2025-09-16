@@ -4,12 +4,13 @@ local L = Addon.L
 local function InitializeSettings()
 
     local defaults = {
+        lastRanVersion = GetAddOnMetadata("ClassicRaidInfoAndResets", "Version"),
         raidInfoButton = 1, -- 1=Hide , 2=ToggleRaidIcons , 3=ShowDefualtWindow
         includeZGMadness = true,
         hideForNoneSixty = false,
         minimapPipShown = true,
         minimapPipPostion = {x=-73,y=30},
-        selectedView = 1 , -- 1=IconView , 2=FullView , 3=SimpleView
+        selectedView = 1 , -- 1=IconView , 2=FullView , 3=SimpleView        
     }
 
     if type(Options) ~= "table" then
@@ -27,7 +28,7 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent("ADDON_LOADED")
 frame:SetScript("OnEvent", function(self, event, addonName)
 
-    if addonName == "ClassicRaidInfoAndResets" then 
+    if addonName == "ClassicRaidInfoAndResets" then       
         local title =  GetAddOnMetadata("ClassicRaidInfoAndResets", "Title")
         if WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC then
             print(("|cffffd100 [%s]|r |cffff0000 ~ %s|r"):format(title,L["WRONG_VERSION"]))
