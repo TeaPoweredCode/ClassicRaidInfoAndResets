@@ -7,8 +7,7 @@ Addon.MiniMapPip = {
 }
 
 function Addon.MiniMapPip:Setup()
-
-    local minimapButton = CreateFrame("Button", "Classic Raid Info & Resets", Minimap)
+    local minimapButton = CreateFrame("Button", "ClassicRaidInfoAndResets_MinimapIcon", Minimap)
     minimapButton:SetSize(32, 32)
     minimapButton:SetPoint("CENTER", Minimap, "CENTER", Options.minimapPipPostion.x, Options.minimapPipPostion.y)
 
