@@ -60,9 +60,8 @@ function Addon.ViewFull:Init()
         Addon.ViewFull.Sizes.maxTextWidth = math.max(raidName:GetStringWidth() + elements.raidSavedID:GetStringWidth(), Addon.ViewFull.Sizes.maxTextWidth)
 
         if key == "ZG" then
-            elements.textGroup:SetHeight(Addon.ViewFull.Sizes.iconSize + 35)
+            elements.textGroup:SetHeight(Addon.ViewFull.Sizes.iconSize + 27)
             elements.zgBoss = Addon.UIHelper:CreateText(elements.textGroup, "MADDNESS_STRING", {"TOPLEFT", 8, -40})
-            elements.zgTime = Addon.UIHelper:CreateText(elements.textGroup, "MADDNESS_TIME", {"TOPLEFT", 8, -58}, nil, {0.2,0.8,0.2})
         end
 
         self.RaidElements[key] = elements
@@ -75,16 +74,24 @@ function Addon.ViewFull:Show()
     local raidsData = Addon.RaidInfoUtility:GetRaidsData()
     self:SetRaidStates(raidsData)
 
-    local yposOffset = Options.includeZGMadness and -35 or 0
-    self.RaidElements["ZG"].textGroup:SetHeight(Options.includeZGMadness and (45 + 35) or 45)
+    local yposOffset = 0 -- Used for raids after zg if maddness data shown
+    if Options.includeZGMadness then
+        yposOffset = Options.showFullMadnessRotation and -75 or -30
+    end
+
+    self.RaidElements["ZG"].textGroup:SetHeight(45 + (yposOffset*-1))
     Addon.UIHelper:Shown(self.RaidElements["ZG"].zgBoss,Options.includeZGMadness)
-    Addon.UIHelper:Shown(self.RaidElements["ZG"].zgTime,Options.includeZGMadness)
 
     for i = 4, #Addon.RaidInfoUtility.RaidOrder, 1 do
         local raid = self.RaidElements[Addon.RaidInfoUtility.RaidOrder[i]]
         raid.raidFrame:SetPoint("TOPLEFT", self.Frame, "TOPLEFT" ,0 , (i - 1) * -43 + yposOffset)
         raid.raidFrame:SetPoint("TOPRIGHT", self.Frame, "TOPRIGHT" ,0 , (i - 1) * -43 + yposOffset)
     end
+
+    self.Frame:SetWidth(
+        Addon.ViewFull.Sizes.iconSize +
+        math.max(Addon.ViewFull.Sizes.maxTextWidth, (Options.includeZGMadness and self.RaidElements["ZG"].zgBoss:GetStringWidth() or 0))
+    )
 
     self.Frame:Show()
 end
@@ -104,15 +111,16 @@ function Addon.ViewFull:SetRaidStates(raidsData)
 
         if raid.code == "ZG" and Options.includeZGMadness then
             local zgData = Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
-            self.RaidElements[raid.code].zgBoss:SetText(zgData.formated)
-            self.RaidElements[raid.code].zgTime:SetText(L["CHANGES_IN"] ..": " .. zgData.changeIn)
+            local zgStrings = {}
+            for index,bossData in ipairs(zgData.bosses) do                
+                if index == zgData.currentBoss or Options.showFullMadnessRotation then                    
+                    table.insert(zgStrings, ("|cffffffff%s|r"):format(index == zgData.currentBoss and "> " or "- ") .. bossData)
+                end
+            end
+            table.insert(zgStrings, L["CHANGES_IN"] ..": " .. zgData.changeIn)                    
+           self.RaidElements[raid.code].zgBoss:SetText(table.concat(zgStrings, "\n"))
         end
     end
-
-    self.Frame:SetWidth(
-        Addon.ViewFull.Sizes.iconSize +
-        math.max(Addon.ViewFull.Sizes.maxTextWidth, (Options.includeZGMadness and self.RaidElements["ZG"].zgBoss:GetStringWidth() or 0))
-    )
 end
 
 function Addon.ViewFull:Hide()

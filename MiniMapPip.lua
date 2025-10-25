@@ -60,17 +60,22 @@ function Addon.MiniMapPip:Setup()
     minimapButton:SetScript("OnEnter", function(self)
         Addon.RaidInfoUtility:StoreSavedRaidIDs()
         local raidsData = Addon.RaidInfoUtility:GetRaidsData()
-        local zgData = Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
-
+        
         GameTooltip:SetOwner(self, "ANCHOR_TOPRIGHT")
         GameTooltip:SetText("Classic Raid Info & Resets", 1, 1, 1)
         local unSavedColourString = "|cffffd100%s -|r |cff8d8d8d%s|r"
         local savedColourString = "|cffffd100%s -|r |cffffffff%s|r"
-        for key,value in pairs(raidsData) do
-            local raidString = (value.savedID and savedColourString or unSavedColourString):format(value.name,(value.savedID and value.savedID or L["NOT_SAVED"]))
-            GameTooltip:AddDoubleLine(raidString, value.time, 1, 1, 1, 0.2, 0.8, 0.2)
-            if value.code == "ZG" and Options.includeZGMadness then
-                GameTooltip:AddDoubleLine("- " .. zgData.formated, zgData.changeIn, 1, 1, 1, 0.2, 0.8, 0.2)
+        for key,raid in pairs(raidsData) do
+            local raidString = (raid.savedID and savedColourString or unSavedColourString):format(raid.name,(raid.savedID and raid.savedID or L["NOT_SAVED"]))
+            GameTooltip:AddDoubleLine(raidString, raid.time, 1, 1, 1, 0.2, 0.8, 0.2)
+            if raid.code == "ZG" and Options.includeZGMadness then
+                local zgData = Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
+                for index,bossData in ipairs(zgData.bosses) do
+                    if index == zgData.currentBoss or Options.showFullMadnessRotation then
+                        local symbol, time = unpack(index == zgData.currentBoss and {"> ", zgData.changeIn} or {"- ", ""})
+                        GameTooltip:AddDoubleLine(symbol .. bossData, time, 1, 1, 1, 0.2, 0.8, 0.2)
+                    end
+                end
             end
         end
         GameTooltip:Show()

@@ -7,6 +7,7 @@ local function InitializeSettings()
         lastRanVersion = GetAddOnMetadata("ClassicRaidInfoAndResets", "Version"),
         raidInfoButton = 1, -- 1=Hide , 2=ToggleRaidIcons , 3=ShowDefualtWindow
         includeZGMadness = true,
+        showFullMadnessRotation = true,
         hideForNoneSixty = false,
         minimapPipShown = true,
         minimapPipPostion = {x=-73,y=30},
@@ -40,6 +41,12 @@ frame:SetScript("OnEvent", function(self, event, addonName)
             print(("|cffffd100 [%s]|r |cffff0000 ~ %s|r"):format(title,L["WRONG_REGION"]))
             return
         end
+
+
+        local version = GetAddOnMetadata("ClassicRaidInfoAndResets", "Version")
+        -- if Options.lastRanVersion != version then  -- for when i need it 
+        -- end
+        Options.lastRanVersion = version
 
         InitializeSettings()
         Addon.OptionsPage:Setup()

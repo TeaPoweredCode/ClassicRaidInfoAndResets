@@ -39,8 +39,8 @@ function Addon.OptionsPage:CreateRaidInfoDropdown()
     UIDropDownMenu_JustifyText(dropdown, "LEFT")
 end
 
-function Addon.OptionsPage:DrawIconView(pos)
-    local groupFrame = CreateFrame("Frame", nil, self.OptionsPanel)
+function Addon.OptionsPage:DrawIconView(parent,pos)
+    local groupFrame = CreateFrame("Frame", nil, parent)
     groupFrame:SetSize(200, 150)
 
     self:DrawFrame(groupFrame,{100, 150},{"TOPLEFT", 0, 0})
@@ -52,8 +52,8 @@ function Addon.OptionsPage:DrawIconView(pos)
     return groupFrame
 end
 
-function Addon.OptionsPage:DrawFullView(pos)
-    local groupFrame = CreateFrame("Frame", nil, self.OptionsPanel)
+function Addon.OptionsPage:DrawFullView(parent,pos)
+    local groupFrame = CreateFrame("Frame", nil, parent)
     groupFrame:SetSize(200, 150)
 
     self:DrawFrame(groupFrame,{100, 150},{"TOPLEFT", 0, 0})
@@ -66,8 +66,8 @@ function Addon.OptionsPage:DrawFullView(pos)
     return groupFrame
 end
 
-function Addon.OptionsPage:DrawSimpleView(pos)
-    local groupFrame = CreateFrame("Frame", nil, self.OptionsPanel)
+function Addon.OptionsPage:DrawSimpleView(parent,pos)
+    local groupFrame = CreateFrame("Frame", nil, parent)
     groupFrame:SetSize(200, 150)
 
     self:DrawFrame(groupFrame,{100, 150},{"TOPLEFT", 0, 0})
@@ -103,41 +103,56 @@ function Addon.OptionsPage:BuildUI()
     Addon.UIHelper:CreateText(self.OptionsPanel, L["RAID_INFO_BUTTON"], {"TOPLEFT", 20, -60}, 10)
     self:CreateRaidInfoDropdown()
 
-    Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["INCLUDE_EDGE_OF_MADNESS"], {"TOPLEFT", 15, -105}, Options.includeZGMadness, function(self)
-        Options.includeZGMadness = self:GetChecked()
-    end)
-    Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["HIDE_FOR_NONE_SIXTIES"], {"TOPLEFT", 15, -135}, Options.hideForNoneSixty, function(self)
-        Options.hideForNoneSixty = self:GetChecked()
-    end)
-
-    Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["SHOW_MAPPIP"], {"TOPLEFT", 15, -165}, Options.minimapPipShown,function(self)
+    Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["SHOW_MINIMAP_ICON"], {"TOPLEFT", 15, -105}, Options.minimapPipShown,function(self)
         Options.minimapPipShown = self:GetChecked()
         Addon.UIHelper:Shown(Addon.MiniMapPip.button, Options.minimapPipShown)
     end)
 
+    Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["HIDE_FOR_NONE_SIXTIES"], {"TOPLEFT", 15, -135}, Options.hideForNoneSixty, function(self)
+        Options.hideForNoneSixty = self:GetChecked()
+    end)
 
-    Addon.UIHelper:CreateText(self.OptionsPanel, L["Select_View"], {"TOPLEFT", 15, -200}, 12, {1, 1, 1})
+    --ZG 
+    local zgFrame = CreateFrame("Frame", nil, self.OptionsPanel)
+    zgFrame:SetSize(500, 200)
+    zgFrame:SetPoint("TOPLEFT",15, -175)
+    Addon.UIHelper:CreateText(zgFrame, L["ZULGURUB"], {"TOPLEFT", 0, 0}, 12, {1, 1, 1})
+
+    Addon.UIHelper:CreateCheckButton(zgFrame, L["INCLUDE_EDGE_OF_MADNESS"], {"TOPLEFT", 0, -25}, Options.includeZGMadness, function(self)
+        Options.includeZGMadness = self:GetChecked()
+    end)    
+
+    Addon.UIHelper:CreateCheckButton(zgFrame, L["SHOW_EDGE_OF_MADNESS_FULL"], {"TOPLEFT", 0, -55}, Options.showFullMadnessRotation, function(self)
+        Options.showFullMadnessRotation = self:GetChecked()
+    end)
+
+    --views 
+    local viewsFrame = CreateFrame("Frame", nil, self.OptionsPanel)
+    viewsFrame:SetSize(500, 300)
+    viewsFrame:SetPoint("TOPLEFT",15, -275)
+
+    Addon.UIHelper:CreateText(viewsFrame, L["Select_View"], {"TOPLEFT", 0, 0}, 12, {1, 1, 1})
 
     table.insert(self.ViewCheckBoxs,
-        Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["Icon_View"], {"TOPLEFT", 15, -220}, Options.selectedView == 1, function(self)
+        Addon.UIHelper:CreateCheckButton(viewsFrame, L["Icon_View"], {"TOPLEFT", 0, -20}, Options.selectedView == 1, function(self)
              Addon.OptionsPage:SelectViewChecked(1)
         end)
     )
-    self:DrawIconView({"TOPLEFT", 15, -245});
+    self:DrawIconView(viewsFrame,{"TOPLEFT", 0, -45});
 
     table.insert(self.ViewCheckBoxs,
-        Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["Full_View"], {"TOPLEFT", 215, -220}, Options.selectedView == 2, function(self)
+        Addon.UIHelper:CreateCheckButton(viewsFrame, L["Full_View"], {"TOPLEFT", 200, -20}, Options.selectedView == 2, function(self)
             Addon.OptionsPage:SelectViewChecked(2)
         end)
     )
-    self:DrawFullView({"TOPLEFT", 215, -245})
+    self:DrawFullView(viewsFrame,{"TOPLEFT", 200, -45})
 
     table.insert(self.ViewCheckBoxs,
-        Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["Simple_View"], {"TOPLEFT", 415, -220}, Options.selectedView == 3, function(self)
+        Addon.UIHelper:CreateCheckButton(viewsFrame, L["Simple_View"], {"TOPLEFT", 400, -20}, Options.selectedView == 3, function(self)
             Addon.OptionsPage:SelectViewChecked(3)
         end)
     )
-    self:DrawSimpleView({"TOPLEFT", 415, -245})
+    self:DrawSimpleView(viewsFrame,{"TOPLEFT", 400, -45})
 
     --credits
     Addon.UIHelper:CreateLine(self.OptionsPanel,{"BOTTOMLEFT", 0, 20},{650, 1},{1, 1, 1, 0.5})

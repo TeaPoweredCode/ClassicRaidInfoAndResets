@@ -85,8 +85,12 @@ function Addon.ViewIcon:AddZGMaddnessTooltipInfo()
         maddnessLine:SetFont(_font, 14, _flags)
     end
 
-    GameTooltip:AddLine(("|cffff8000%s|r"):format(zgData.boss))
-    GameTooltip:AddLine(("|T%s:16:16:0:0|t |cff1eff00[%s]|r"):format(zgData.itemIcon,zgData.itemName))
+    local zgData = Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
+    for index,bossData in ipairs(zgData.bosses) do                
+        if index == zgData.currentBoss or Options.showFullMadnessRotation then                    
+            GameTooltip:AddLine(("|cffffffff%s|r"):format(index == zgData.currentBoss and "> " or "- ") .. bossData)
+        end
+    end
     GameTooltip:AddLine(L["CHANGES_IN"] ..": " .. zgData.changeIn, 0.2, 0.8, 0.2)
 end
 

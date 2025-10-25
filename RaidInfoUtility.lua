@@ -23,19 +23,19 @@ Addon.RaidInfoUtility = {
         },
         Bosses = {
             {
-                boss = {name="Gri'lek", id = 15082},
+                boss = {name = "Gri'lek", id = 15082},
                 item = {name = "Gri'lek's Blood", id = 19939 , icon = "134806", localName = nil}
             },
             {
-                boss = {name="Hazza'rah", id = 15083},
+                boss = {name = "Hazza'rah", id = 15083},
                 item = {name = "Hazza'rah's Dream Thread", id = 19942 , icon = "133686", localName = nil}
             },
             {
-                boss = {name="Renataki", id = 15084},
+                boss = {name = "Renataki", id = 15084},
                 item = {name = "Renataki's Tooth", id = 19940 , icon = "134298", localName = nil}
             },
             {
-                boss = {name="Wushoolay", id = 15085},
+                boss = {name = "Wushoolay", id = 15085},
                 item = {name = "Wushoolay's Mane", id = 19941 , icon = "134323", localName = nil}
             }
         },
@@ -62,6 +62,21 @@ function Addon.RaidInfoUtility:CalculateResetTime(baseTime, intervalDays)
     return table.concat(parts, " ")
 end
 
+function Addon.RaidInfoUtility:GetGMaddnessItemName(bossIndex)
+    if self.ZGMadness.Bosses[bossIndex].item.localName == nil then
+        local name = GetItemInfo(self.ZGMadness.Bosses[bossIndex].item.id)
+        if(name) then 
+            self.ZGMadness.Bosses[bossIndex].item.localName = name
+        end
+    end
+
+    if self.ZGMadness.Bosses[bossIndex].item.localName ~= nil then
+        return self.ZGMadness.Bosses[bossIndex].item.localName
+    else
+        return self.ZGMadness.Bosses[bossIndex].item.name
+    end
+end
+
 function Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
     local regionDateTime = self.ZGMadness.TimeProfiles[GetCurrentRegion()].regionDateTime
 
@@ -74,23 +89,18 @@ function Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
     local timeIntoCycle = elapsed % eightWeeks
     local currentBlock = math.floor(timeIntoCycle / twoWeekBlock) + 1
 
-    if self.ZGMadness.Bosses[currentBlock].item.localName == nil then
-        local name = GetItemInfo(self.ZGMadness.Bosses[currentBlock].item.id)
-        if(name) then 
-            self.ZGMadness.Bosses[currentBlock].item.localName = name
-        end
+    local data = {
+        currentBoss = currentBlock,
+        changeIn = self:CalculateResetTime(regionDateTime,14),
+        bosses = {}
+    }
+
+    for index,bossData in ipairs(self.ZGMadness.Bosses) do 
+        local formated = ("|cffff8000%s|r |T%s:16:16:0:0|t |cff1eff00[%s]|r"):format(bossData.boss.name,bossData.item.icon,self:GetGMaddnessItemName(index))
+        table.insert(data.bosses, formated)
     end
 
-    local itemName = self.ZGMadness.Bosses[currentBlock].item.localName and self.ZGMadness.Bosses[currentBlock].item.localName 
-                                                                         or self.ZGMadness.Bosses[currentBlock].item.name
-    local zgData = {
-        boss = self.ZGMadness.Bosses[currentBlock].boss.name,
-        itemName = itemName,
-        itemIcon = self.ZGMadness.Bosses[currentBlock].item.icon,
-        changeIn = self:CalculateResetTime(regionDateTime,14),
-    }
-    zgData.formated = ("|cffff8000%s|r |T%s:16:16:0:0|t |cff1eff00[%s]|r"):format(zgData.boss,zgData.itemIcon,zgData.itemName)
-    return zgData
+    return data
 end
 
 function Addon.RaidInfoUtility:GetSavedRaidInfo(index)

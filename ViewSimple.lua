@@ -31,27 +31,29 @@ end
 
 function Addon.ViewSimple:SetRaidStates()
     local raidsData = Addon.RaidInfoUtility:GetRaidsData()
-    local zgData = Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
 
     local unSavedColourString = "|cffffd100%s -|r |cff8d8d8d%s|r"
     local savedColourString = "|cffffd100%s -|r |cffffffff%s|r"
 
     local raidsStrings = {}
-    local timesStrings = {}
 
     for key,raid in pairs(raidsData) do
         local raidString = (raid.savedID and savedColourString or unSavedColourString):format(raid.name,(raid.savedID and raid.savedID or L["NOT_SAVED"]))
         table.insert(raidsStrings, raidString)
         table.insert(raidsStrings, ("|cff33cc33%s|r"):format(raid.time))
-
         if raid.code == "ZG" and Options.includeZGMadness then
-            table.insert(raidsStrings, zgData.formated)
+            local zgData = Addon.RaidInfoUtility:CalculateZGMaddnessInfo()
+            for index,bossData in ipairs(zgData.bosses) do
+                if index == zgData.currentBoss or Options.showFullMadnessRotation then
+                    table.insert(raidsStrings, ("|cffffffff%s|r"):format(index == zgData.currentBoss and "> " or "- ") .. bossData)
+                end
+            end
             table.insert(raidsStrings, ("|cff33cc33%s|r"):format(zgData.changeIn))
         end
         table.insert(raidsStrings,"")
     end
 
-    self.RaidsText:SetText( table.concat(raidsStrings, "\n"))
+    self.RaidsText:SetText(table.concat(raidsStrings, "\n"))
 
     local setWidth = self.RaidsText:GetStringWidth() + 20  -- + middle gap size + boarder edge
     local setHeight = self.RaidsText:GetStringHeight() + 30 + 10 -- + Title space + bottom boarder edge
