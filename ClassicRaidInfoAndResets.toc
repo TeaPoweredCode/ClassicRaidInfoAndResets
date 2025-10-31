@@ -1,4 +1,4 @@
-## Interface: 11507
+## Interface: 11508
 ## Title: Classic Raid Info And Resets
 ## Notes: Adds a custom Raid Info panel
 ## Author: TeaPoweredCode | Gundrick-Thunderstrike
