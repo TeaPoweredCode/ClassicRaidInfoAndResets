@@ -42,13 +42,13 @@ frame:SetScript("OnEvent", function(self, event, addonName)
             return
         end
 
+        InitializeSettings()
 
         local version = GetAddOnMetadata("ClassicRaidInfoAndResets", "Version")
         -- if Options.lastRanVersion != version then  -- for when i need it 
         -- end
         Options.lastRanVersion = version
 
-        InitializeSettings()
         Addon.OptionsPage:Setup()
         Addon.MiniMapPip:Setup()
         Addon.RaidInfoTabManager:Setup()
