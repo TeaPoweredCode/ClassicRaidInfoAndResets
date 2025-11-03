@@ -12,11 +12,12 @@ UIHelper.lua
 RaidInfoUtility.lua
 
 MiniMapPip.lua
+
 ViewFull.lua
 ViewIcon.lua
 ViewSimple.lua
+SocialRaidTabManager.lua
 
-RaidInfoTabManager.lua
 OptionsPage.lua
 
 Init.lua

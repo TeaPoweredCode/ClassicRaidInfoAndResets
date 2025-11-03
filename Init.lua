@@ -51,6 +51,6 @@ frame:SetScript("OnEvent", function(self, event, addonName)
 
         Addon.OptionsPage:Setup()
         Addon.MiniMapPip:Setup()
-        Addon.RaidInfoTabManager:Setup()
+        Addon.SocialRaidTabManager:Setup()
     end
 end)
