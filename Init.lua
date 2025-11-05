@@ -12,6 +12,7 @@ local function InitializeSettings()
         minimapPipShown = true,
         minimapPipPostion = {x=-73,y=30},
         selectedView = 1 , -- 1=IconView , 2=FullView , 3=SimpleView        
+        useSocialRaidTabView = true,
     }
 
     if type(Options) ~= "table" then
