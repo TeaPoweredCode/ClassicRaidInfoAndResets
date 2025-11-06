@@ -32,8 +32,8 @@ function Addon.SocialRaidTabManager:ModifyDefaultUI()
 end
 
 function Addon.SocialRaidTabManager:SetRaidInfoButton()
-    Addon.UIHelper:Shown(self.CustomRaidInfoButton, Options.raidInfoButton == 2)
-    Addon.UIHelper:Shown(RaidFrameRaidInfoButton, Options.raidInfoButton == 3)
+    Addon.UIHelper:Shown(RaidFrameRaidInfoButton, not Options.useSocialRaidTabView or Options.raidInfoButton == 3) -- Defult buton
+    Addon.UIHelper:Shown(self.CustomRaidInfoButton, Options.useSocialRaidTabView and Options.raidInfoButton == 2) -- New button
 end
 
 function Addon.SocialRaidTabManager:ShowViewFrames()
@@ -46,9 +46,9 @@ function Addon.SocialRaidTabManager:HideViewFrames()
     end
 end
 
-function Addon.SocialRaidTabManager:UpdateIconVisibility()
+function Addon.SocialRaidTabManager:UpdateViewVisibility()
     local selectedTab = PanelTemplates_GetSelectedTab(FriendsFrame)
-    if selectedTab == 4 then
+    if Options.useSocialRaidTabView and selectedTab == 4 then
         if UnitLevel("player") >= 60 or not Options.hideForNoneSixty then
             self:ShowViewFrames()
         end
@@ -73,7 +73,7 @@ function Addon.SocialRaidTabManager:Setup()
     end)
     hooksecurefunc("FriendsFrame_Update", function()
         C_Timer.After(0.05, function()
-            self:UpdateIconVisibility()
+            self:UpdateViewVisibility()
         end)
     end)
 end
