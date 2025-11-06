@@ -1,7 +1,7 @@
 local _, Addon = ...
 local L = Addon.L
 
-Addon.RaidInfoTabManager = {
+Addon.SocialRaidTabManager = {
     CustomRaidInfoButton = nil,
     Views = {
         Addon.ViewIcon,        
@@ -10,7 +10,7 @@ Addon.RaidInfoTabManager = {
     },
 }
 
-function Addon.RaidInfoTabManager:ModifyDefaultUI()
+function Addon.SocialRaidTabManager:ModifyDefaultUI()
     local copyButton = CreateFrame("Button", nil, RaidFrameRaidInfoButton:GetParent(), "UIPanelButtonTemplate")
     copyButton:SetSize(RaidFrameRaidInfoButton:GetWidth(), RaidFrameRaidInfoButton:GetHeight())
     copyButton:SetText(RaidFrameRaidInfoButton:GetText())
@@ -31,24 +31,24 @@ function Addon.RaidInfoTabManager:ModifyDefaultUI()
     RaidInfoFrame:SetFrameStrata("TOOLTIP")
 end
 
-function Addon.RaidInfoTabManager:SetRaidInfoButton()
-    Addon.UIHelper:Shown(self.CustomRaidInfoButton, Options.raidInfoButton == 2)
-    Addon.UIHelper:Shown(RaidFrameRaidInfoButton, Options.raidInfoButton == 3)
+function Addon.SocialRaidTabManager:SetRaidInfoButton()
+    Addon.UIHelper:Shown(RaidFrameRaidInfoButton, not Options.useSocialRaidTabView or Options.raidInfoButton == 3) -- Defult buton
+    Addon.UIHelper:Shown(self.CustomRaidInfoButton, Options.useSocialRaidTabView and Options.raidInfoButton == 2) -- New button
 end
 
-function Addon.RaidInfoTabManager:ShowViewFrames()
+function Addon.SocialRaidTabManager:ShowViewFrames()
     self.Views[Options.selectedView]:Show()
 end
 
-function Addon.RaidInfoTabManager:HideViewFrames()
+function Addon.SocialRaidTabManager:HideViewFrames()
     for i,view in pairs(self.Views) do
         view:Hide()
     end
 end
 
-function Addon.RaidInfoTabManager:UpdateIconVisibility()
+function Addon.SocialRaidTabManager:UpdateViewVisibility()
     local selectedTab = PanelTemplates_GetSelectedTab(FriendsFrame)
-    if selectedTab == 4 then
+    if Options.useSocialRaidTabView and selectedTab == 4 then
         if UnitLevel("player") >= 60 or not Options.hideForNoneSixty then
             self:ShowViewFrames()
         end
@@ -57,7 +57,7 @@ function Addon.RaidInfoTabManager:UpdateIconVisibility()
     end
 end
 
-function Addon.RaidInfoTabManager:Setup()   
+function Addon.SocialRaidTabManager:Setup()   
     self:ModifyDefaultUI()
 
     for i,view in pairs(self.Views) do
@@ -73,7 +73,7 @@ function Addon.RaidInfoTabManager:Setup()
     end)
     hooksecurefunc("FriendsFrame_Update", function()
         C_Timer.After(0.05, function()
-            self:UpdateIconVisibility()
+            self:UpdateViewVisibility()
         end)
     end)
 end

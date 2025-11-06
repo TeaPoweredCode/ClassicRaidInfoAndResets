@@ -2,7 +2,7 @@
 ## Title: Classic Raid Info And Resets
 ## Notes: Adds a custom Raid Info panel
 ## Author: TeaPoweredCode | Gundrick-Thunderstrike
-## Version: 1.2.3
+## Version: 1.3.0
 ## SavedVariables: Options
 ## OptionalDeps: TitanClassic
 
@@ -12,11 +12,12 @@ UIHelper.lua
 RaidInfoUtility.lua
 
 MiniMapPip.lua
+
 ViewFull.lua
 ViewIcon.lua
 ViewSimple.lua
+SocialRaidTabManager.lua
 
-RaidInfoTabManager.lua
 OptionsPage.lua
 
 Init.lua

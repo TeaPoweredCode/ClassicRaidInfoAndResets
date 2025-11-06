@@ -6,9 +6,12 @@ Addon.OptionsPage = {
     ViewCheckBoxs = {},
 }
 
-function Addon.OptionsPage:CreateRaidInfoDropdown()
-    local dropdown = CreateFrame("Frame", nil, self.OptionsPanel, "UIDropDownMenuTemplate")
-    dropdown:SetPoint("TOPLEFT", 0, -70)
+function Addon.OptionsPage:CreateRaidInfoButtonDropdown(parent, pos)    
+    Addon.UIHelper:CreateText(parent, L["RAID_INFO_BUTTON"], pos, 11)
+
+    local dropdown = CreateFrame("Frame", nil, parent, "UIDropDownMenuTemplate")
+    local anchor , x, y = unpack(pos)
+    dropdown:SetPoint(anchor, x-15, y-15)
 
     local options = {
         {text = L["HIDE_BUTTON"], value = 1},
@@ -97,62 +100,71 @@ function Addon.OptionsPage:BuildUI()
     Addon.UIHelper:CreateText(self.OptionsPanel, "Classic Raid Info & Resets", {"TOP", -10, -12}, 16)
     Addon.UIHelper:CreateLine(self.OptionsPanel,{"TOPRIGHT", -15, -20}, {220, 1}, {1, 1, 1, 0.5})
 
-    --settings
-    Addon.UIHelper:CreateText(self.OptionsPanel, L["SETTINGS"], {"TOPLEFT", 10, -30}, 12, {1, 1, 1})
+    --minimap icon
+    Addon.UIHelper:CreateText(self.OptionsPanel, L["MINIMAP_ICON"], {"TOPLEFT", 10, -30}, 12, {1, 1, 1})
 
-    Addon.UIHelper:CreateText(self.OptionsPanel, L["RAID_INFO_BUTTON"], {"TOPLEFT", 20, -60}, 10)
-    self:CreateRaidInfoDropdown()
-
-    Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["SHOW_MINIMAP_ICON"], {"TOPLEFT", 15, -105}, Options.minimapPipShown,function(self)
+    Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["SHOW_MINIMAP_ICON"], {"TOPLEFT", 15, -50}, Options.minimapPipShown,function(self)
         Options.minimapPipShown = self:GetChecked()
         Addon.UIHelper:Shown(Addon.MiniMapPip.button, Options.minimapPipShown)
     end)
 
-    Addon.UIHelper:CreateCheckButton(self.OptionsPanel, L["HIDE_FOR_NONE_SIXTIES"], {"TOPLEFT", 15, -135}, Options.hideForNoneSixty, function(self)
-        Options.hideForNoneSixty = self:GetChecked()
-    end)
 
     --ZG 
     local zgFrame = CreateFrame("Frame", nil, self.OptionsPanel)
     zgFrame:SetSize(500, 200)
-    zgFrame:SetPoint("TOPLEFT",15, -175)
+    zgFrame:SetPoint("TOPLEFT",10, -85)
     Addon.UIHelper:CreateText(zgFrame, L["ZULGURUB"], {"TOPLEFT", 0, 0}, 12, {1, 1, 1})
 
-    Addon.UIHelper:CreateCheckButton(zgFrame, L["INCLUDE_EDGE_OF_MADNESS"], {"TOPLEFT", 0, -25}, Options.includeZGMadness, function(self)
+    Addon.UIHelper:CreateCheckButton(zgFrame, L["INCLUDE_EDGE_OF_MADNESS"], {"TOPLEFT", 5, -20}, Options.includeZGMadness, function(self)
         Options.includeZGMadness = self:GetChecked()
     end)    
 
-    Addon.UIHelper:CreateCheckButton(zgFrame, L["SHOW_EDGE_OF_MADNESS_FULL"], {"TOPLEFT", 0, -55}, Options.showFullMadnessRotation, function(self)
+    Addon.UIHelper:CreateCheckButton(zgFrame, L["SHOW_EDGE_OF_MADNESS_FULL"], {"TOPLEFT", 5, -50}, Options.showFullMadnessRotation, function(self)
         Options.showFullMadnessRotation = self:GetChecked()
     end)
 
-    --views 
-    local viewsFrame = CreateFrame("Frame", nil, self.OptionsPanel)
-    viewsFrame:SetSize(500, 300)
-    viewsFrame:SetPoint("TOPLEFT",15, -275)
+    --social->rait tab view
+    local socialRaidTabManagerFrame = CreateFrame("Frame", nil, self.OptionsPanel)
+    socialRaidTabManagerFrame:SetSize(500, 300)
+    socialRaidTabManagerFrame:SetPoint("TOPLEFT",10, -175)
+    Addon.UIHelper:CreateText(socialRaidTabManagerFrame, L["SOCIAL_RAID_TAB"], {"TOPLEFT", 0, 0}, 12, {1, 1, 1})
 
-    Addon.UIHelper:CreateText(viewsFrame, L["Select_View"], {"TOPLEFT", 0, 0}, 12, {1, 1, 1})
+    Addon.UIHelper:CreateCheckButton(socialRaidTabManagerFrame, L["USE_SOCIAL_RAID_TAB_VIEW"], {"TOPLEFT", 5, -20}, Options.useSocialRaidTabView, function(self)
+        Options.useSocialRaidTabView = self:GetChecked()
+    end)
+
+    local viewsFrame = CreateFrame("Frame", nil, socialRaidTabManagerFrame)
+    viewsFrame:SetSize(500, 300)
+    viewsFrame:SetPoint("TOPLEFT",5, -55)
+
+    Addon.UIHelper:CreateText(viewsFrame, L["SELECT_VIEW"], {"TOPLEFT", 0, 0}, 11)
 
     table.insert(self.ViewCheckBoxs,
-        Addon.UIHelper:CreateCheckButton(viewsFrame, L["Icon_View"], {"TOPLEFT", 0, -20}, Options.selectedView == 1, function(self)
+        Addon.UIHelper:CreateCheckButton(viewsFrame, L["ICON_VIEW"], {"TOPLEFT", 0, -15}, Options.selectedView == 1, function(self)
              Addon.OptionsPage:SelectViewChecked(1)
         end)
     )
-    self:DrawIconView(viewsFrame,{"TOPLEFT", 0, -45});
+    self:DrawIconView(viewsFrame,{"TOPLEFT", 0, -40});
 
     table.insert(self.ViewCheckBoxs,
-        Addon.UIHelper:CreateCheckButton(viewsFrame, L["Full_View"], {"TOPLEFT", 200, -20}, Options.selectedView == 2, function(self)
+        Addon.UIHelper:CreateCheckButton(viewsFrame, L["FULL_VIEW"], {"TOPLEFT", 200, -15}, Options.selectedView == 2, function(self)
             Addon.OptionsPage:SelectViewChecked(2)
         end)
     )
-    self:DrawFullView(viewsFrame,{"TOPLEFT", 200, -45})
+    self:DrawFullView(viewsFrame,{"TOPLEFT", 200, -40})
 
     table.insert(self.ViewCheckBoxs,
-        Addon.UIHelper:CreateCheckButton(viewsFrame, L["Simple_View"], {"TOPLEFT", 400, -20}, Options.selectedView == 3, function(self)
+        Addon.UIHelper:CreateCheckButton(viewsFrame, L["SIMPLE_VIEW"], {"TOPLEFT", 400, -15}, Options.selectedView == 3, function(self)
             Addon.OptionsPage:SelectViewChecked(3)
         end)
     )
-    self:DrawSimpleView(viewsFrame,{"TOPLEFT", 400, -45})
+    self:DrawSimpleView(viewsFrame,{"TOPLEFT", 400, -40})
+
+    self:CreateRaidInfoButtonDropdown(socialRaidTabManagerFrame,{"TOPLEFT", 5, -260})
+
+    Addon.UIHelper:CreateCheckButton(socialRaidTabManagerFrame, L["ONLY_SHOW_LEVEL_60"], {"TOPLEFT", 5, -310}, Options.hideForNoneSixty, function(self)
+        Options.hideForNoneSixty = self:GetChecked()
+    end)
 
     --credits
     Addon.UIHelper:CreateLine(self.OptionsPanel,{"BOTTOMLEFT", 0, 20},{650, 1},{1, 1, 1, 0.5})
